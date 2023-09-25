@@ -24,7 +24,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news){
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter : NewsAdapter
 
-    private val TAG = "BreakingNews Fragment"
+    //private val TAG = "BreakingNews Fragment"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,7 +50,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news){
                         val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
                         isLastPage = viewModel.breakingNewsPage == totalPages
                     if (isLastPage) {
-                        rvBreakingNews.setPadding(0,0,0,0)
+                        rvBreakingNews.setPadding(0,0,0,5)
                     }
                     }
                 }

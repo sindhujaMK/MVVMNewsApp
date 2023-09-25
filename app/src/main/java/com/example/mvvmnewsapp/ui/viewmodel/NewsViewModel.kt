@@ -20,14 +20,14 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 
-class NewsViewModel(app: Application, val newsRepository : NewsRepository) : AndroidViewModel(app){
+class NewsViewModel(app: Application, private val newsRepository : NewsRepository) : AndroidViewModel(app){
 
      val breakingNews : MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
      var breakingNewsPage = 1
      var breakingNewsResponse : NewsResponse? = null
 
-    val SearchNews : MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
-    var SearchNewsPage = 1
+    val searchNews : MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
+    var searchNewsPage = 1
     var searchNewsResponse : NewsResponse? = null
 
     init {
@@ -63,7 +63,7 @@ class NewsViewModel(app: Application, val newsRepository : NewsRepository) : And
     private fun handleSearchNewsResponse(response: Response<NewsResponse>) : Resource<NewsResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
-                SearchNewsPage++
+                searchNewsPage++
                 if (searchNewsResponse == null) {
                     searchNewsResponse = resultResponse
                 } else {
@@ -87,19 +87,21 @@ class NewsViewModel(app: Application, val newsRepository : NewsRepository) : And
         newsRepository.deleteArticle(article)
     }
 
+
+    //check internet connection while request api response
     private suspend fun safeSearchNewsCall(searchQuery : String) {
-        SearchNews.postValue(Resource.Loading())
+        searchNews.postValue(Resource.Loading())
         try {
             if (hasInternetConnection()) {
-                val response = newsRepository.searchNews(searchQuery, SearchNewsPage)
-                SearchNews.postValue(handleSearchNewsResponse(response))
+                val response = newsRepository.searchNews(searchQuery, searchNewsPage)
+                searchNews.postValue(handleSearchNewsResponse(response))
             } else {
-                SearchNews.postValue(Resource.Error("No internet connection"))
+                searchNews.postValue(Resource.Error("No internet connection"))
             }
         } catch (t: Throwable) {
             when(t) {
-                is IOException -> SearchNews.postValue(Resource.Error("Network Failure"))
-                else -> SearchNews.postValue(Resource.Error("Conversion Error"))
+                is IOException -> searchNews.postValue(Resource.Error("Network Failure"))
+                else -> searchNews.postValue(Resource.Error("Conversion Error"))
             }
         }
     }

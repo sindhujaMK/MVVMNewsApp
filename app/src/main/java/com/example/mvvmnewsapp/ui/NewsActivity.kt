@@ -28,6 +28,7 @@ class NewsActivity : AppCompatActivity() {
 
         //connect bottom navigation to navigation component
         val navHostFragment= supportFragmentManager.findFragmentById(R.id.newsNavHostFragment) as NavHostFragment
+
         val navController= navHostFragment.navController
         bottomNavigationView.setupWithNavController(navController)
     }

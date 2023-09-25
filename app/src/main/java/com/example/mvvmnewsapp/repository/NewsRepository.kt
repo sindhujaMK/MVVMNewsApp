@@ -4,7 +4,7 @@ import com.example.mvvmnewsapp.api.RetrofitInstance
 import com.example.mvvmnewsapp.db.ArticleDatabase
 import com.example.mvvmnewsapp.models.Article
 
-class NewsRepository(val db : ArticleDatabase) {
+class NewsRepository(private val db : ArticleDatabase) {
 
     suspend fun getBreakingNews(countryCode  :String, pageNumber: Int) =
         RetrofitInstance.api.getBreakingNews(countryCode, pageNumber)

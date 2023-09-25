@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
     lateinit var viewModel: NewsViewModel
-
     lateinit var newsAdapter: NewsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,23 +58,24 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         }
 
 
-        viewModel.SearchNews.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.searchNews.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
                     hideProgressBar()
                     response.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
                         val totalPages = newsResponse.totalResults / Constants.QUERY_PAGE_SIZE + 2
-                        isLastPage = viewModel.SearchNewsPage == totalPages
+                        isLastPage = viewModel.searchNewsPage == totalPages
                         if (isLastPage) {
-                            rvSearchNews.setPadding(0, 0, 0, 0)
+                            rvSearchNews.setPadding(0, 0, 0, 5)
                         }
                     }
                 }
                 is Resource.Error -> {
                     hideProgressBar()
                     response.message?.let { message ->
-                        Toast.makeText(activity, "An error occurred: $message", Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "An error occurred: $message", Toast.LENGTH_LONG)
+                            .show()
                         //Log.e(TAG, "An error occurred : $message")
                     }
                 }
